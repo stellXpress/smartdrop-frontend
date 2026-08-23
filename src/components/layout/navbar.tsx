@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Container } from '@/components/ui/container';
 import { RouteTicker } from './route-ticker';
 import { mainNav } from '@/lib/data';
-import { cn } from '@/lib/utils';
+import { cn, initials } from '@/lib/utils';
 import { getMe, type CurrentUser } from '@/lib/api';
 import { clearToken, getToken } from '@/lib/auth';
 
@@ -25,15 +25,6 @@ function useCurrentUser() {
   }, []);
 
   return [user, setUser] as const;
-}
-
-function initials(name: string) {
-  return name
-    .split(' ')
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
 }
 
 function AccountMenu({ user, onSignOut }: { user: CurrentUser; onSignOut: () => void }) {
@@ -124,9 +115,21 @@ export function Navbar() {
                 key={item.label}
                 className="relative flex items-stretch"
                 onMouseEnter={() => setOpenMenu(item.label)}
+                onBlur={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                    setOpenMenu(null);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') setOpenMenu(null);
+                }}
               >
                 <button
                   type="button"
+                  aria-expanded={openMenu === item.label}
+                  aria-haspopup="true"
+                  onClick={() => setOpenMenu((v) => (v === item.label ? null : item.label))}
+                  onFocus={() => setOpenMenu(item.label)}
                   className={cn(
                     'flex items-center border-l border-border px-4 text-sm font-medium uppercase tracking-wide text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground',
                     openMenu === item.label && 'bg-secondary text-foreground',

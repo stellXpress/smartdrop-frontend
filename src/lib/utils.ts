@@ -18,3 +18,14 @@ export function formatCompact(value: number) {
     value,
   );
 }
+
+export function initials(name: string) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}

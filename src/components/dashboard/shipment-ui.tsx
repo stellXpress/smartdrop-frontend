@@ -1,4 +1,5 @@
 import type { Shipment } from '@/lib/api';
+export { initials } from '@/lib/utils';
 
 export const TERMINAL_STATUSES: Shipment['status'][] = [
   'DELIVERED',
@@ -30,11 +31,3 @@ export function formatAmount(amount: number, assetCode: Shipment['assetCode']) {
   return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(amount)} ${assetCode}`;
 }
 
-export function initials(name: string) {
-  return name
-    .split(' ')
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
-}
